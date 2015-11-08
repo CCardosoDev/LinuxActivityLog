@@ -1,0 +1,152 @@
+3 tipos de mensagem
+	diffie-hellmen
+	deny assinado
+	cifrada
+		-> autenticacao
+		-> comando
+		-> novaPass
+		-> tearDown
+
+cifrada:
+
+	<encryptedMessage seqNumber="" session="###" iv="###">
+		base64
+	<encryptedMessage>
+
+	a mensagem cifrada é:
+
+		<acknowledge/>
+
+		<notAcknowledge/>
+
+		<tearDown/>
+
+		<newSessionKey type="request"/>
+		
+		<newSessionKey type="response">
+				<tokenSignature></tokenSignature>
+				<clientTokenB64>
+					<?xml version="1.0"?>
+					<clientToken session="###">
+						<sessionKey></sessionKey>
+						<experitationDate></experitationDate>
+						<serverCertificate></serverCertificate>
+					<clientToken>
+				</clientTokenB64>		
+		</authentication>
+
+		<command date = "date">"text"</command>
+
+		<authentication type="clientAuthentication">
+			<secretSignature></secretSignature>
+			<clientInfo>
+				<nBi></nBi>
+				<name></name>
+				<userName></userName>
+				<hostName></hostName>
+			</clientInfo>
+		</authentication>
+
+		<authentication type="serverAuthentication">
+			<secretSignature></secretSignature>
+			<clientToken session="###">
+				<sessionKey></sessionKey>
+				<experitationDate></experitationDate>
+				<serverCertificate></serverCertificate>
+				<tokenSignature></tokenSignature>
+			<clientToken>
+		</authentication>
+		
+		<acknowledge/>
+
+		<notAcknowledge>
+			<error></error>
+		</notAcknowledge>
+		
+
+diffie-hellmen
+
+uma mensagem do cliente inicia a comm
+	envia g,p e A
+
+servidor responde com
+	g, p, B
+
+dps assinaturas
+
+	<diffie-hellman seqNumber="" session="###" type="clientParam">
+		<g></g>
+		<p></p>
+		<A></A>
+	</diffie-hellman>
+
+	<?xml version="1.0"?> 
+	<diffie-hellman session="###" type="serverParam">
+		<g></g>
+		<p></p>
+		<B></B> 
+		<encryptedMessage seqNumber="" session="###" iv="###">
+			<authentication type="serverAuthentication">
+				<secretSignature></secretSignature>
+				<tokenSignature></tokenSignature>
+				<clientTokenB64>
+					<?xml version="1.0"?>
+					<clientToken session="###">
+						<sessionKey></sessionKey>
+						<experitationDate></experitationDate>
+						<serverCertificate></serverCertificate>
+					<clientToken>
+				</clientTokenB64>
+			</authentication>
+		<encryptedMessage>
+	</diffie-hellman>
+
+	<requestDenied seqNumber="" session="###">
+		<signature>###</signature>
+		<certificate>###</certificate>
+	</requestDenied>	
+
+
+
+	<encryptedMessage seqNumber="" session="###" iv="###">
+
+	<encryptedMessage>
+
+"-----BEGIN CERTIFICATE-----\n"
+"MIIHFjCCBf6gAwIBAgIIQZhP2zb18CIwDQYJKoZIhvcNAQEFBQAwfDELMAkGA1UEBhMCUFQxHDAa\n"
+"BgNVBAoME0NhcnTDo28gZGUgQ2lkYWTDo28xFDASBgNVBAsMC3N1YkVDRXN0YWRvMTkwNwYDVQQD\n"
+"DDBFQyBkZSBBdXRlbnRpY2HDp8OjbyBkbyBDYXJ0w6NvIGRlIENpZGFkw6NvIDAwMDUwHhcNMTEx\n"
+"MjI5MTExNDM2WhcNMTYxMjI5MDAwMDAwWjCB1DELMAkGA1UEBhMCUFQxHDAaBgNVBAoME0NhcnTD\n"
+"o28gZGUgQ2lkYWTDo28xHDAaBgNVBAsME0NpZGFkw6NvIFBvcnR1Z3XDqnMxIzAhBgNVBAsMGkF1\n"
+"dGVudGljYcOnw6NvIGRvIENpZGFkw6NvMRUwEwYDVQQEDAxTw4EgREEgU0lMVkExFDASBgNVBCoM\n"
+"C0pPw4NPIFBBVUxPMRQwEgYDVQQFEwtCSTEzNzYwOTA5NDEhMB8GA1UEAwwYSk/Dg08gUEFVTE8g\n"
+"U8OBIERBIFNJTFZBMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCrWoBZiayJ2oRv7B07f/uV\n"
+"LbXxuvFUQAmgZO5k3kDPW7I0jzq+6+B/snzz3+jV4oWKdAg3cvnT4grA3f/vlzBLvXJy4bsx90Y3\n"
+"clMbTImkLFJbmd1V8/zq2GVZLW3uQnuLlOFrPrmH0bUU6ABk3GTFbvEhLeX9LnCDMb7/IrWTiwID\n"
+"AQABo4IDxTCCA8EwDAYDVR0TAQH/BAIwADAOBgNVHQ8BAf8EBAMCA4gwHQYDVR0OBBYEFOx8q+U9\n"
+"G5+G8ofqD7rVEqOIqtWrMB8GA1UdIwQYMBaAFMu8aIu4gPEWNGRz5Yx1ebtckwlRMIIB9QYDVR0g\n"
+"BIIB7DCCAegwgfIGCGCEbAEBAQIUMIHlMCgGCCsGAQUFBwIBFhxodHRwOi8vd3d3LnNjZWUuZ292\n"
+"LnB0L3BjZXJ0MIG4BggrBgEFBQcCAjCBqx6BqABPACAAYwBlAHIAdABpAGYAaQBjAGEAZABvACAA\n"
+"ZQBtAGkAdABpAGQAbwAgAHMAZQBnAHUAbgBkAG8AIABlAHMAdABhACAAcABvAGwA7QB0AGkAYwBh\n"
+"ACAA6QAgAHUAdABpAGwAaQB6AGEAZABvACAAcABhAHIAYQAgAGEAdQB0AGUAbgB0AGkAYwBhAOcA\n"
+"4wBvACAAZABvACAAQwBpAGQAYQBkAOMAbzB4BgtghGwBAQECBAIABzBpMGcGCCsGAQUFBwIBFlto\n"
+"dHRwOi8vcGtpLmNhcnRhb2RlY2lkYWRhby5wdC9wdWJsaWNvL3BvbGl0aWNhcy9kcGMvY2Nfc3Vi\n"
+"LWVjX2NpZGFkYW9fYXV0ZW50aWNhY2FvX2RwYy5odG1sMHcGDGCEbAEBAQIEAgABATBnMGUGCCsG\n"
+"AQUFBwIBFllodHRwOi8vcGtpLmNhcnRhb2RlY2lkYWRhby5wdC9wdWJsaWNvL3BvbGl0aWNhcy9w\n"
+"Yy9jY19zdWItZWNfY2lkYWRhb19hdXRlbnRpY2FjYW9fcGMuaHRtbDBrBgNVHR8EZDBiMGCgXqBc\n"
+"hlpodHRwOi8vcGtpLmNhcnRhb2RlY2lkYWRhby5wdC9wdWJsaWNvL2xyYy9jY19zdWItZWNfY2lk\n"
+"YWRhb19hdXRlbnRpY2FjYW9fY3JsMDAwNV9wMDAwNC5jcmwwcQYDVR0uBGowaDBmoGSgYoZgaHR0\n"
+"cDovL3BraS5jYXJ0YW9kZWNpZGFkYW8ucHQvcHVibGljby9scmMvY2Nfc3ViLWVjX2NpZGFkYW9f\n"
+"YXV0ZW50aWNhY2FvX2NybDAwMDVfZGVsdGFfcDAwMDQuY3JsMEsGCCsGAQUFBwEBBD8wPTA7Bggr\n"
+"BgEFBQcwAYYvaHR0cDovL29jc3AuYXVjLmNhcnRhb2RlY2lkYWRhby5wdC9wdWJsaWNvL29jc3Aw\n"
+"EQYJYIZIAYb4QgEBBAQDAgCgMCgGA1UdCQQhMB8wHQYIKwYBBQUHCQExERgPMTk5MDA4MjMxMjAw\n"
+"MDBaMA0GCSqGSIb3DQEBBQUAA4IBAQCtduT6W5h/y1cb1ghHirUMo6PGOpkHAv3AWy2axus/cEKT\n"
+"8ML8B3NWlg5lbxsj7hGAGbX7PumyODJw/rLhp7bwt17kOOy0EX3RpozPSVQ9sH0XN0p2hcczjkva\n"
+"cT4lBUJjKjzAqS/cMzidsDt0mkzvHQ+F0aGYTwi5ep/BC5usjUklnky4AYi3J+HOwt1TpvezFIeA\n"
+"OeSueTAxzpHLLQHETz55LgvwyLA8fWZYblYZGv8KA6iQyTkFC4NQW3aj+mucNmJrHDUC3BPb4MXf\n"
+"CifVJPCCUorlRqlSp+hr6lDijZ0/Ru6xJuu9XTgMZvA1AYuMjy3m1EcFDAL6AK6XQZTj\n"
+"-----END CERTIFICATE-----"
+
+
+3064637080:error:0407006A:rsa routines:RSA_padding_check_PKCS1_type_1:block type is not 01:rsa_pk1.c:100:
+3064637080:error:04067072:rsa routines:RSA_EAY_PUBLIC_DECRYPT:padding check failed:rsa_eay.c:699:

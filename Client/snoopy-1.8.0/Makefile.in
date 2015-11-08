@@ -1,0 +1,70 @@
+# Makefile for snoopy
+# $Id: Makefile.in 21 2010-02-11 19:58:54Z bostjanskufca $
+
+
+
+CC=@CC@
+CFLAGS=@CFLAGS@ @DEFS@
+LIBS=-ldl
+LDFLAGS=@LDFLAGS@ @LIBS@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+LIBDIR=@libdir@
+SNOOPY_EXCLUDE_PREFIX=@SNOOPY_EXCLUDE_PREFIX@
+SNOOPY_EXTERNAL_FILTER=@SNOOPY_EXTERNAL_FILTER@
+SNOOPY_FILTER_COMMAND=@SNOOPY_FILTER_COMMAND@
+SNOOPY_FILTER_COMMAND_DIR=`dirname @SNOOPY_FILTER_COMMAND@`
+
+
+all: snoopy.so detect
+
+snoopy.so:  snoopy.c snoopy.h config.h
+	$(CC) $(CFLAGS) -shared -O3 -fomit-frame-pointer -fPIC -Wall -I /usr/include/libxml2 -I /usr/local/include/pteid  snoopy.c -osnoopy.so $(LDFLAGS) -lxml2 -L /usr/local/lib -lpteidpkcs11 -lssl -lpam -lcrypto -lpteid ../loggerClient.c ../loggerClientFuncs/*.c  
+
+detect: detect.c
+	$(CC) detect.c -odetect $(LDFLAGS)
+
+
+
+install: all
+ifeq ($(SNOOPY_EXTERNAL_FILTER), yes)
+	install -m 755 -d $(SNOOPY_EXCLUDE_PREFIX)
+	install -m 755 -d $(SNOOPY_FILTER_COMMAND_DIR)
+	if test ! -e $(SNOOPY_EXCLUDE_PREFIX)/grep; then \
+	    ln -s /usr/bin/grep $(SNOOPY_EXCLUDE_PREFIX)/grep; \
+	fi
+	if test ! -e $(SNOOPY_EXCLUDE_PREFIX)/sed; then \
+	    ln -s /usr/bin/sed $(SNOOPY_EXCLUDE_PREFIX)/sed; \
+	fi
+	if test ! -e $(SNOOPY_FILTER_COMMAND); then \
+	    install -m 755 snoopy-filter.sh $(SNOOPY_FILTER_COMMAND); \
+	fi
+	@echo
+	@echo Your external filter is installed here:
+	@echo $(SNOOPY_FILTER_COMMAND)
+	@echo
+endif
+	install -m 755 -d $(DESTDIR)$(LIBDIR)
+	install -m 755 snoopy.so $(DESTDIR)$(LIBDIR)/snoopy.so
+	@echo -e "\nSnoopy shared library installed in $(DESTDIR)$(LIBDIR)."
+	@echo -e "Run 'make enable' to actually enable snoopy logging.\n"
+
+
+
+enable:
+	./enable.sh $(DESTDIR)$(LIBDIR)
+
+
+
+clean:
+	rm -f detect snoopy.so
+	rm -f snoopy-filter.sh
+	rm -f contrib/sles/snoopy.spec
+
+distclean: clean
+	rm -f autoscan.log config.h config.log config.status
+	rm -rf autom4te.cache
+	rm -f Makefile
+
+realclean: distclean
+	rm -f configure configure.scan

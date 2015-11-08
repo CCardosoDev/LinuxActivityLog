@@ -1,0 +1,3 @@
+gcc opensslTests.c -lcrypto
+
+gcc cipherTest.c -lcrypto
